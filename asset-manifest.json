@@ -1,0 +1,14 @@
+{
+  "files": {
+    "main.css": "/reactprofile/static/css/main.5437e1bf.css",
+    "main.js": "/reactprofile/static/js/main.635b00df.js",
+    "static/media/saiteja.jpg": "/reactprofile/static/media/saiteja.4e414fdf069143314db2.jpg",
+    "index.html": "/reactprofile/index.html",
+    "main.5437e1bf.css.map": "/reactprofile/static/css/main.5437e1bf.css.map",
+    "main.635b00df.js.map": "/reactprofile/static/js/main.635b00df.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.5437e1bf.css",
+    "static/js/main.635b00df.js"
+  ]
+}
