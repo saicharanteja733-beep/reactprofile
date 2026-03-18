@@ -14,7 +14,7 @@ import ContactPage from "./pages/ContactPage";
 
 export default function App() {
   return (
-    <BrowserRouter>
+    <BrowserRouter basename="/reactprofile">
       <Header />
 
       <Routes>
