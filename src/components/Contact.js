@@ -1,4 +1,5 @@
 import { useState } from "react";
+import ReCAPTCHA from "react-google-recaptcha";
 
 export default function Contact() {
   const [form, setForm] = useState({
@@ -61,66 +62,32 @@ export default function Contact() {
   }
 
   return (
-    <section
-      className="contact"
-      style={{
-        padding: "40px",
-        textAlign: "center"
-      }}
-    >
+    <section className="contact">
       <h2>Contact Me</h2>
       <p>Let’s work together or ask anything.</p>
 
-      <form
-        onSubmit={handleSubmit}
-        style={{
-          maxWidth: "400px",
-          margin: "auto",
-          display: "flex",
-          flexDirection: "column"
-        }}
-      >
+      <form onSubmit={handleSubmit}>
         <input
           type="text"
           placeholder="Your Name"
           value={form.name}
-          onChange={(e) =>
-            setForm({ ...form, name: e.target.value })
-          }
-          style={{ padding: "10px", marginBottom: "10px" }}
+          onChange={(e) => setForm({ ...form, name: e.target.value })}
         />
 
         <input
           type="email"
           placeholder="Your Email"
           value={form.email}
-          onChange={(e) =>
-            setForm({ ...form, email: e.target.value })
-          }
-          style={{ padding: "10px", marginBottom: "10px" }}
+          onChange={(e) => setForm({ ...form, email: e.target.value })}
         />
 
         <textarea
           placeholder="Your Message"
           value={form.message}
-          onChange={(e) =>
-            setForm({ ...form, message: e.target.value })
-          }
-          style={{ padding: "10px", marginBottom: "10px" }}
+          onChange={(e) => setForm({ ...form, message: e.target.value })}
         />
 
-        <button
-          type="submit"
-          style={{
-            padding: "12px",
-            backgroundColor: "black",
-            color: "white",
-            border: "none",
-            cursor: "pointer"
-          }}
-        >
-          Send Message
-        </button>
+        <button type="submit">Send Message</button>
       </form>
     </section>
   );
