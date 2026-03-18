@@ -1,5 +1,7 @@
 import { useState } from "react";
 
+const LEAD_API_URL = process.env.REACT_APP_LEAD_API_URL || "http://localhost:3001/api/leads";
+
 export default function Contact() {
   const [form, setForm] = useState({
     name: "",
@@ -7,60 +9,54 @@ export default function Contact() {
     message: ""
   });
   const [submitted, setSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState("");
 
   function handleChange(e) {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
   }
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
+    setError("");
 
     if (!form.name || !form.email || !form.message) {
-      alert("Please fill all fields");
+      setError("Please fill all fields.");
       return;
     }
 
     if (!form.email.includes("@")) {
-      alert("Invalid email");
+      setError("Invalid email address.");
       return;
     }
 
-    alert("Submitting your details...");
+    setIsSubmitting(true);
 
-    const sfForm = document.createElement("form");
-    sfForm.action =
-      "https://webto.salesforce.com/servlet/servlet.WebToLead?encoding=UTF-8";
-    sfForm.method = "POST";
+    try {
+      const response = await fetch(LEAD_API_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: form.name,
+          email: form.email,
+          message: form.message
+        })
+      });
 
-    function addField(name, value) {
-      const input = document.createElement("input");
-      input.type = "hidden";
-      input.name = name;
-      input.value = value;
-      sfForm.appendChild(input);
+      const result = await response.json();
+
+      if (!response.ok || !result.success) {
+        throw new Error(result.error || "Could not send lead. Please try again later.");
+      }
+
+      setSubmitted(true);
+      setForm({ name: "", email: "", message: "" });
+    } catch (err) {
+      setError(err.message || "Something went wrong.");
+    } finally {
+      setIsSubmitting(false);
     }
-
-    addField("oid", "00DgK00000GGLth");
-    addField(
-      "retURL",
-      "https://saicharanteja733-beep.github.io/reactprofile/"
-    );
-    addField("last_name", form.name);
-    addField("company", "Website User");
-    addField("email", form.email);
-    addField("description", form.message);
-    addField("lead_source", "Portfolio Website");
-
-    // target hidden iframe so user stays on this app and does not navigate away
-    sfForm.target = "salesforce-target";
-    document.body.appendChild(sfForm);
-    sfForm.submit();
-    setSubmitted(true);
-
-    setTimeout(() => {
-      document.body.removeChild(sfForm);
-    }, 2000);
   }
 
   if (submitted) {
@@ -76,7 +72,11 @@ export default function Contact() {
     <section className="contact-section" style={{ maxWidth: "720px", margin: "0 auto", padding: "2rem" }}>
       <h2>Contact Me</h2>
       <p>Please use the form below to send me a message.</p>
-      <iframe name="salesforce-target" title="salesforce-target" style={{ display: "none" }} />
+      {error && (
+        <div style={{ color: "#a00", background: "#fee", padding: "0.75rem", borderRadius: "0.1875rem" }}>
+          {error}
+        </div>
+      )}
       <form onSubmit={handleSubmit} style={{ display: "grid", gap: "1rem" }}>
         <label>
           Name
@@ -114,10 +114,9 @@ export default function Contact() {
           />
         </label>
 
-        {/* Optional ReCAPTCHA placeholder; add your site key if used */}
-        {/* <ReCAPTCHA sitekey="YOUR_RECAPTCHA_SITE_KEY" onChange={() => {}} /> */}
-
-        <button type="submit">Send Message</button>
+        <button type="submit" disabled={isSubmitting}>
+          {isSubmitting ? "Sending..." : "Send Message"}
+        </button>
       </form>
     </section>
   );
