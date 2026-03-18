@@ -51,8 +51,6 @@ export default function Contact() {
     addField("email", form.email);
     addField("description", form.message);
     addField("lead_source", "Portfolio Website");
-    addField("debug", "1");
-    addField("debugEmail", "saicharanteja.733@gmail.com");
 
     // target hidden iframe so user stays on this app and does not navigate away
     sfForm.target = "salesforce-target";
